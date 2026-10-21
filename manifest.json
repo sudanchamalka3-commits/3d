@@ -1,0 +1,10 @@
+{
+  "name": "My AR Coloring",
+  "short_name": "AR Coloring",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}

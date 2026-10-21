@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My AR Coloring</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#000000">
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<style>
+  body { margin: 0; overflow: hidden; font-family: sans-serif; }
+  #hint {
+    position: fixed; left: 0; right: 0; bottom: 16px; text-align: center;
+    color: #fff; text-shadow: 0 1px 4px #000; z-index: 10; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div id="hint">Coloring page එක camera එකට පෙන්නන්න 📷</div>
+
+<!-- targets.mind = ඔයාගේ coloring page එකෙන් compile කරපු file එක (README බලන්න) -->
+<a-scene mindar-image="imageTargetSrc: ./targets.mind; filterMinCF:0.0001; filterBeta:0.001;"
+         color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
+         vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+  <a-entity mindar-image-target="targetIndex: 0">
+    <!-- ඔයාගේම හදපු sheep character (spheres වලින්) -->
+    <a-entity position="0 0 0.3" rotation="90 0 0" scale="0.8 0.8 0.8"
+              animation="property: position; dir: alternate; dur: 700; easing: easeInOutSine; loop: true; to: 0 0.2 0.3">
+      <a-sphere position="0 0.5 0"    radius="0.5"  color="#ffffff"></a-sphere>
+      <a-sphere position="-0.35 0.3 0.1" radius="0.3" color="#f5f5f5"></a-sphere>
+      <a-sphere position="0.35 0.3 0.1"  radius="0.3" color="#f5f5f5"></a-sphere>
+      <a-sphere position="0 0.95 0.35" radius="0.32" color="#ffe0bd"></a-sphere>
+      <a-sphere position="-0.12 1.02 0.62" radius="0.05" color="#000"></a-sphere>
+      <a-sphere position="0.12 1.02 0.62"  radius="0.05" color="#000"></a-sphere>
+      <a-sphere position="0 0.5 0" radius="0.05" color="#000" visible="false"></a-sphere>
+    </a-entity>
+  </a-entity>
+</a-scene>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const t = document.querySelector("[mindar-image-target]");
+    const h = document.getElementById("hint");
+    const sc = document.querySelector("a-scene");
+    sc.addEventListener("arReady", () => h.textContent = "Page එක camera එකට පෙන්නන්න 📷");
+    sc.addEventListener("arError", () => {
+      h.style.cssText += ";background:#c00;padding:8px;pointer-events:auto;z-index:99999";
+      h.textContent = "❌ targets.mind load වුණේ නෑ. File එක repo එකේ index.html ළඟ තියෙනවද බලන්න.";
+    });
+    t.addEventListener("targetFound", () => h.textContent = "✅ Page එක අඳුරගත්තා!");
+    t.addEventListener("targetLost", () => h.textContent = "Page එක camera එකට පෙන්නන්න 📷");
+  });
+</script>
+</body>
+</html>
