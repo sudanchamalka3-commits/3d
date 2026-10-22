@@ -1,4 +1,4 @@
-const CACHE = "ar-coloring-v1";
+const CACHE = "ar-coloring-v2";
 const CORE = ["./", "./index.html", "./targets.mind", "./manifest.json"];
 
 self.addEventListener("install", (e) => {
